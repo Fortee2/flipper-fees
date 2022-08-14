@@ -1,6 +1,5 @@
 import FeeTypes from "../enums/FeeTypes";
 import SellingFee from "../model/SellingFee";
-import ItemCalculator from "./ItemCalculator";
 
 class FeeCalculator {
     public sellPrice: number;
