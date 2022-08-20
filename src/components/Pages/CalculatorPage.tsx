@@ -6,6 +6,7 @@ import { Box } from "@mui/system";
 import SellingFee from "../../model/SellingFee";
 import FeeTypes from "../../enums/FeeTypes";
 import FeeCalculator from "../../calculators/FeeCalculator";
+import { PrecentageInput } from "../shared/PrecentageInput";
 
 const CalculatorPage =  () => {
     const [itemPrice, setItemPrice] = useState<number>(0);
@@ -95,7 +96,7 @@ const CalculatorPage =  () => {
                 <div className="row" hidden={!showSalesTax} >
                         <div className="col-6">
                         <div>
-                            <TextField
+                            {/* <TextField
                                 required
                                 id="sales-tax"
                                 type={"number"}
@@ -104,6 +105,12 @@ const CalculatorPage =  () => {
                                     setSalesTax(Number(event.target.value));
                                 } }
                                 value={salesTax}
+                            /> */}
+                            <PrecentageInput
+                            //    id="sales-tax"
+                                label="Sales Tax"
+                                value={salesTax}
+                                handleOnChange={(value)=>{ setSalesTax(value)}}
                             />
                         </div>
                     </div>
