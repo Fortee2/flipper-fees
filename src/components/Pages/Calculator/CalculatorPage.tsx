@@ -12,8 +12,7 @@ const CalculatorPage =  () => {
     const [itemPrice, setItemPrice] = useState<number>(0);
     const [salesTax, setSalesTax] = useState<number>(0);
     const [salesTaxType , setSalesTaxType] = useState<number>(FeeTypes.PERCENTAGE);
-    const [shippingFee, setShippingFee] = useState<number>(0);
-    const [calculatedTax, setCalculatedTax] = useState<number>(0);
+   // const [calculatedTax, setCalculatedTax] = useState<number>(0);
     const [sellPrice, setSellPrice] = useState<number>(0);
     const [shippingChrg, setShippingChrg] = useState<number>(0);
     const [estimatedShipping, setEstimatedShipping] = useState<number>(0);
@@ -26,7 +25,7 @@ const CalculatorPage =  () => {
     const setCalculatedAmount = () => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
         
-        setCalculatedTax(Item.calculatedTax);
+        //setCalculatedTax(Item.calculatedTax);
         setTotalCost(Item.totalItemCost);
     }
 
