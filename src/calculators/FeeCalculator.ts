@@ -1,4 +1,3 @@
-import FeeTypes from "../enums/FeeTypes";
 import SellingFee from "../model/SellingFee";
 
 class FeeCalculator {
@@ -15,25 +14,9 @@ class FeeCalculator {
     public calculateFees = (): number => {
         let totalFees = 0;
         this.fees.forEach(fee => {
-            totalFees += this.calculateFee(fee);
+            totalFees += fee.amount;
         } );
         return totalFees;
-    }
-
-    protected calculateFee = (fee: SellingFee): number => {
-        if(fee.amount !== 0){
-            switch(fee.type){
-                case FeeTypes.PERCENTAGE:
-                    return (this.sellPrice + this.shippingAmt) * fee.amount;
-                    break;
-                case FeeTypes.FIXED: 
-                    return fee.amount;
-                    break;
-            }
-        }
-        
-
-        return 0;  
     }
 }
 

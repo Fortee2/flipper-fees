@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
-import ItemCalculator from "../../calculators/ItemCalculator";
+import ItemCalculator from "../../../calculators/ItemCalculator";
 import { Checkbox, Divider, FormControlLabel, FormGroup } from "@mui/material";
 import { Box } from "@mui/system";
-import SellingFee from "../../model/SellingFee";
-import FeeTypes from "../../enums/FeeTypes";
-import FeeCalculator from "../../calculators/FeeCalculator";
-import { PrecentageInput } from "../shared/PrecentageInput";
+import SellingFee from "../../../model/SellingFee";
+import FeeTypes from "../../../enums/FeeTypes";
+import FeeCalculator from "../../../calculators/FeeCalculator";
+import { PrecentageInput } from "../../shared/PrecentageInput";
 
 const CalculatorPage =  () => {
     const [itemPrice, setItemPrice] = useState<number>(0);
@@ -21,9 +21,7 @@ const CalculatorPage =  () => {
     const [feePrct, setFeePrct] = useState<number>(0);
     const [totalCost, setTotalCost] = useState<number>(0);
     const [totalFee, setTotalFee] = useState<number>(0);
-
     const [showSalesTax, setShowSalesTax] = useState<boolean>(false);
-    const [showActualShipping, setShowActualShipping] = useState<boolean>(false);
 
     const setCalculatedAmount = () => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
@@ -40,15 +38,14 @@ const CalculatorPage =  () => {
             fees
         );
         
-       
         setTotalFee(feeCalculator.calculateFees());
     }
 
     useEffect(() => {
         const fees:SellingFee[]= [];
-        fees.push(new SellingFee("selling" , feePrct, FeeTypes.PERCENTAGE));
-        fees.push(new SellingFee("shipping" , estimatedShipping, FeeTypes.FIXED));
-        fees.push(new SellingFee("packing" , estimatedPacking, FeeTypes.FIXED));
+        fees.push(new SellingFee("selling" , feePrct));
+        fees.push(new SellingFee("shipping" , estimatedShipping));
+        fees.push(new SellingFee("packing" , estimatedPacking));
         calculateTotalFees(fees);
     },[sellPrice, feePrct, shippingChrg,estimatedShipping,estimatedPacking]);
 
@@ -75,7 +72,7 @@ const CalculatorPage =  () => {
                             setItemPrice( Number(event.target.value));
                             
                             } }
-                            label="Item Price"
+                            label="Item Cost"
                             value={itemPrice}
                         />    
                     </div>
@@ -100,6 +97,7 @@ const CalculatorPage =  () => {
                             <div>
                                 <PrecentageInput
                                     label="Sales Tax"
+                                    amtType={FeeTypes.PERCENTAGE}
                                     value={salesTax}
                                     handleOnChange={(value, amtType)=>{ 
                                         setSalesTax(value);
@@ -155,21 +153,7 @@ const CalculatorPage =  () => {
                 </div>
             </Box>
             <Divider>Selling Costs</Divider>
-            <div className="row" >
-                    <div className="col-12">
-                        <FormGroup>
-                            <FormControlLabel control=
-                                {
-                                    <Checkbox 
-                                        checked={showActualShipping}
-                                        onChange={e=>setShowActualShipping(e.target.checked)}
-                                    />
-                                } 
-                                label="Actual Shipping" />
-                        </FormGroup>
-                    </div>
-                </div>
-                <div className="row" hidden={!showActualShipping}>
+                <div className="row">
                     <div className="col-6">
                         <TextField
                             label="Estimated Postage"     
@@ -193,38 +177,32 @@ const CalculatorPage =  () => {
                         />
                     </div>
                 </div>
-            <TextField
-                required
-                id="fee-precent"
-
-                type={"number"}
-                label="Seller Fees"
-                onChange={(event)=>{
-                        setFeePrct(Number(event.target.value));
-                    }
-                }
-                value={feePrct}
-            />
-            <TextField
-            id="ad-fee"
-
-            type={"number"}
-            label="Ad Fee"
-            />
-            <div className="row" >
-                <div className="col-12">
-                    <span>Total Fees</span>
-                    <br></br>
-                    <span>${totalFee}</span>
+                <div className="row" >
+                    <div className="col-12">
+                        <PrecentageInput
+                            label="Seller Fees"
+                            amtType={FeeTypes.PERCENTAGE}
+                            value={feePrct}
+                            handleOnChange={(value)=>{
+                                setFeePrct(value);
+                            }}
+                        /> 
+                    </div>
                 </div>
-            </div>
-            <div className="row" >
-                <div className="col-12">
-                    <span>Expected Profit</span>
-                    <br></br>
-                    <span>${sellPrice + shippingChrg - totalFee - totalCost}</span>
+                <div className="row" >
+                    <div className="col-12">
+                        <span>Total Fees</span>
+                        <br></br>
+                        <span>${totalFee.toPrecision(2)}</span>
+                    </div>
                 </div>
-            </div>
+                <div className="row" >
+                    <div className="col-12">
+                        <span>Expected Profit</span>
+                        <br></br>
+                        <span>${ (sellPrice + shippingChrg - totalFee - totalCost).toPrecision(2)}</span>
+                    </div>
+                </div>
         </div>
 
     );

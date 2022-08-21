@@ -1,4 +1,3 @@
-import { Task } from "@mui/icons-material";
 import FeeTypes from "../enums/FeeTypes";
 
 class ItemCalculator {
@@ -27,7 +26,7 @@ class ItemCalculator {
      protected calculateTaxAmount = (): number => {
 
         if(this.tax <= 0) return 0;
-        
+
         this.calculatedTax = (this.taxType == FeeTypes.PERCENTAGE) ? this.tax  * this.price : this.tax;
         return this.calculatedTax;
     }

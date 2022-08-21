@@ -8,12 +8,13 @@ import FeeTypes from "../../enums/FeeTypes";
 interface PrecentageInputProps {
     label: string;
     value: number;
+    amtType: FeeTypes;
     handleOnChange: (newValue : number, valueType :  number)    => void;   
 }
 
 export const PrecentageInput = (props: PrecentageInputProps) => {
     const [controlValue, setControlValue] = useState<number>(props.value);
-    const [amtType, setAmtType] = useState<number>(100);
+    const [amtType, setAmtType] = useState<number>(props.amtType);
 
     const calculateNewValue = () => {
         const newValue: number = (amtType == FeeTypes.PERCENTAGE) ? controlValue / FeeTypes.PERCENTAGE : controlValue;
@@ -42,13 +43,14 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
                 <FormControl   >
                     <Select
                         value={amtType}
+                        data-testid = "amtType-select"
                         onChange={(event)=>{
                             setAmtType(event.target.value as number);
                             calculateNewValue() ;
                         }}
                     >
-                    <MenuItem value={FeeTypes.PERCENTAGE}>Precentage</MenuItem>
-                    <MenuItem value={FeeTypes.FIXED}>Fixed Amt.</MenuItem>
+                    <MenuItem value="100">Precentage</MenuItem>
+                    <MenuItem value="1">Fixed Amt.</MenuItem>
                     </Select>
                 </FormControl>
             </div>
