@@ -1,6 +1,6 @@
 enum FeeTypes {
-    PERCENTAGE = 'PERCENTAGE',
-    FIXED = 'FIXED',
+    PERCENTAGE = 100,
+    FIXED = 1,
 }
 
 export default FeeTypes;

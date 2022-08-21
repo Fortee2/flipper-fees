@@ -11,6 +11,8 @@ import { PrecentageInput } from "../shared/PrecentageInput";
 const CalculatorPage =  () => {
     const [itemPrice, setItemPrice] = useState<number>(0);
     const [salesTax, setSalesTax] = useState<number>(0);
+    const [salesTaxType , setSalesTaxType] = useState<number>(FeeTypes.PERCENTAGE);
+    const [shippingFee, setShippingFee] = useState<number>(0);
     const [calculatedTax, setCalculatedTax] = useState<number>(0);
     const [sellPrice, setSellPrice] = useState<number>(0);
     const [shippingChrg, setShippingChrg] = useState<number>(0);
@@ -24,7 +26,7 @@ const CalculatorPage =  () => {
     const [showActualShipping, setShowActualShipping] = useState<boolean>(false);
 
     const setCalculatedAmount = () => {
-        const Item = new ItemCalculator( itemPrice, salesTax, 0, 0 );
+        const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
         
         setCalculatedTax(Item.calculatedTax);
         setTotalCost(Item.totalItemCost);
@@ -94,31 +96,23 @@ const CalculatorPage =  () => {
                 </div>
    
                 <div className="row" hidden={!showSalesTax} >
-                        <div className="col-6">
-                        <div>
-                            {/* <TextField
-                                required
-                                id="sales-tax"
-                                type={"number"}
-                                label="Sales Tax"
-                                onChange={(event)=>{
-                                    setSalesTax(Number(event.target.value));
-                                } }
-                                value={salesTax}
-                            /> */}
-                            <PrecentageInput
-                            //    id="sales-tax"
-                                label="Sales Tax"
-                                value={salesTax}
-                                handleOnChange={(value)=>{ setSalesTax(value)}}
-                            />
+                        <div className="col-12">
+                            <div>
+                                <PrecentageInput
+                                    label="Sales Tax"
+                                    value={salesTax}
+                                    handleOnChange={(value, amtType)=>{ 
+                                        setSalesTax(value);
+                                        setSalesTaxType(amtType);
+                                    }}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="col-6">
-                        <span>Tax Amount</span>
-                        <br></br>
-                        <span>${calculatedTax}</span>
-                    </div>
+                        <div className="col-12">
+                            <span>Tax Amount</span>
+                            <br></br>
+                            <span>${salesTax}</span>
+                        </div>
                 </div>
                 <div>
                     <span>Total Cost</span>

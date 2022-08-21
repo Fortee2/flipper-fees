@@ -40,3 +40,7 @@ code {
   clear: both;
   display: table;
 }
+
+.float-left {
+  float: left;
+}
