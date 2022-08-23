@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
 import ItemCalculator from "../../../calculators/ItemCalculator";
-import { Checkbox, Divider, FormControlLabel, FormGroup } from "@mui/material";
+import { AppBar, Divider } from "@mui/material";
 import { Box } from "@mui/system";
 import SellingFee from "../../../model/SellingFee";
 import FeeTypes from "../../../enums/FeeTypes";
 import FeeCalculator from "../../../calculators/FeeCalculator";
 import { PrecentageInput } from "../../shared/PrecentageInput";
+import ItemCost from "./ItemCost";
 
 const CalculatorPage =  () => {
-    const [itemPrice, setItemPrice] = useState<number>(0);
-    const [salesTax, setSalesTax] = useState<number>(0);
-    const [salesTaxType , setSalesTaxType] = useState<number>(FeeTypes.PERCENTAGE);
-   // const [calculatedTax, setCalculatedTax] = useState<number>(0);
+   
     const [sellPrice, setSellPrice] = useState<number>(0);
     const [shippingChrg, setShippingChrg] = useState<number>(0);
     const [estimatedShipping, setEstimatedShipping] = useState<number>(0);
@@ -20,12 +18,11 @@ const CalculatorPage =  () => {
     const [feePrct, setFeePrct] = useState<number>(0);
     const [totalCost, setTotalCost] = useState<number>(0);
     const [totalFee, setTotalFee] = useState<number>(0);
-    const [showSalesTax, setShowSalesTax] = useState<boolean>(false);
 
-    const setCalculatedAmount = () => {
+
+    const setCalculatedAmount = (itemPrice : number, salesTax :number, salesTaxType: FeeTypes ) => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
-        
-        //setCalculatedTax(Item.calculatedTax);
+
         setTotalCost(Item.totalItemCost);
     }
 
@@ -48,75 +45,22 @@ const CalculatorPage =  () => {
         calculateTotalFees(fees);
     },[sellPrice, feePrct, shippingChrg,estimatedShipping,estimatedPacking]);
 
-    useEffect(
-        ()=>{
-            setCalculatedAmount();
-        },[itemPrice, salesTax]
-    );
 
     return(
         
         <div >
-            
-            <h1>Fee Calculator</h1>
+            <AppBar position="static">    
+                Fee Calculator
+            </AppBar>
 
             <Box >
-                <div className="row">
-                    <div className="col-12">
-                        <TextField
-                            required
-                            id="item-priece"
-                            type={"number"}
-                            onChange={(event)=>{
-                            setItemPrice( Number(event.target.value));
-                            
-                            } }
-                            label="Item Cost"
-                            value={itemPrice}
-                        />    
-                    </div>
-                </div>
-                <div className="row" >
-                    <div className="col-12">
-                        <FormGroup>
-                            <FormControlLabel 
-                                control={
-                                    <Checkbox 
-                                        defaultChecked checked={showSalesTax} 
-                                        onChange={e=>setShowSalesTax(e.target.checked)} 
-                                    />
-                                } 
-                                label="Apply Sales Tax"  />
-                        </FormGroup>
-                    </div>
-                </div>
-   
-                <div className="row" hidden={!showSalesTax} >
-                        <div className="col-12">
-                            <div>
-                                <PrecentageInput
-                                    label="Sales Tax"
-                                    amtType={FeeTypes.PERCENTAGE}
-                                    value={salesTax}
-                                    handleOnChange={(value, amtType)=>{ 
-                                        setSalesTax(value);
-                                        setSalesTaxType(amtType);
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <span>Tax Amount</span>
-                            <br></br>
-                            <span>${salesTax}</span>
-                        </div>
-                </div>
+                <ItemCost handleOnChange={setCalculatedAmount} />
                 <div>
                     <span>Total Cost</span>
                     <br></br>
                     <span>${totalCost}</span>
                 </div>
-        </Box>
+            </Box>
         <br />                    
           
             <Divider>Selling Target</Divider>
