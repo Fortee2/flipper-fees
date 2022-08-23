@@ -31,7 +31,8 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
                 <TextField
                     required
                     type={"number"}
-                    label={props.label}
+                    inputProps={{ 'data-testid': 'item-price-input' }}
+            
                     onChange={(event)=>{
                         setControlValue(parseFloat(event.target.value));
                         calculateNewValue();
