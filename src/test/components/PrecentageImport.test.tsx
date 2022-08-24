@@ -1,6 +1,6 @@
 import {render, getByRole, Screen} from '@testing-library/react';
-import { PrecentageInput } from '../PrecentageInput';
-import FeeTypes from '../../../enums/FeeTypes';
+import { PrecentageInput } from '../../components/shared/PrecentageInput';
+import FeeTypes from '../../enums/FeeTypes';
 import userEvent from '@testing-library/user-event';
 
 //test
