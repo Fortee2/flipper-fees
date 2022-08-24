@@ -12,6 +12,7 @@ import ItemCost from "./ItemCost";
 const CalculatorPage =  () => {
    
     const [sellPrice, setSellPrice] = useState<number>(0);
+    const [salesTax, setSalesTax] = useState<number>(0);
     const [shippingChrg, setShippingChrg] = useState<number>(0);
     const [estimatedShipping, setEstimatedShipping] = useState<number>(0);
     const [estimatedPacking, setEstimatedPacking] = useState<number>(0);
@@ -22,7 +23,7 @@ const CalculatorPage =  () => {
 
     const setCalculatedAmount = (itemPrice : number, salesTax :number, salesTaxType: FeeTypes ) => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
-
+        setSalesTax(Item.calculatedTax)
         setTotalCost(Item.totalItemCost);
     }
 
@@ -55,6 +56,11 @@ const CalculatorPage =  () => {
 
             <Box >
                 <ItemCost handleOnChange={setCalculatedAmount} />
+                <div className="col-6">
+                    <span>Tax Amount</span>
+                        <br></br>
+                        <span>${salesTax}</span>
+                </div>
                 <div>
                     <span>Total Cost</span>
                     <br></br>

@@ -35,7 +35,7 @@ const ItemCost = (props: ItemCostProps ) => {
                 </div>
             </div>   
             <div className="row"  >
-                <div className="col-6">
+                <div className="col-12">
                     <PrecentageInput
                         label="Sales Tax"
                         amtType={FeeTypes.PERCENTAGE}
@@ -46,11 +46,7 @@ const ItemCost = (props: ItemCostProps ) => {
                         }}
                     />
                 </div>
-                <div className="col-6">
-                    <span>Tax Amount</span>
-                        <br></br>
-                        <span>${salesTax}</span>
-                </div>
+
             </div>
         </>
     );
