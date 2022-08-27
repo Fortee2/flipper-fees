@@ -1,10 +1,11 @@
-import {render, getByRole, Screen} from '@testing-library/react';
+import {render} from '@testing-library/react';
 import { PrecentageInput } from '../../components/shared/PrecentageInput';
 import FeeTypes from '../../enums/FeeTypes';
 import userEvent from '@testing-library/user-event';
 
+describe('PrecentageInput', () => {
 //test
-test("Check Precentage",
+test("Intial State Check Precentage",
     () => {
         let testValue = 0;
         let testType = 0;
@@ -15,7 +16,7 @@ test("Check Precentage",
         expect(testValue).toBe(0.07);
     });
 
-test("Check Fixed",
+test("Intial State Check Fixed",
     () => {
         let testValue = 0;
         let testType = 0;
@@ -28,10 +29,7 @@ test("Check Fixed",
 
 test("Input Number",
     () => {
-        let testValue = 0;
-        let testType = 0;
-
-        const screen = render(<PrecentageInput label={"Test Percentage"} value={7} amtType={FeeTypes.FIXED} handleOnChange={(newValue : number, valueType :  number) => {testValue = newValue; testType = valueType}}/>);
+        const screen = render(<PrecentageInput label={"Test Percentage"} value={7} amtType={FeeTypes.FIXED} handleOnChange={() =>{ return;}}/>);
         
         const testInput = screen.getByTestId("item-price-input");
         userEvent.type(testInput, "8");
@@ -40,3 +38,49 @@ test("Input Number",
         expect(testInput).toBeInTheDocument();
         expect(testInput).toHaveAttribute("type", "number");
     });
+});
+
+test("Dollar Button",
+    () => {
+        const screen = render(<PrecentageInput label={"Test Percentage"} value={7} amtType={FeeTypes.PERCENTAGE} handleOnChange={() =>{ return;}}/>);
+        
+        const testButton = screen.getByRole("button", {pressed: false});
+
+        expect(testButton).toBeInTheDocument();
+        expect(testButton).toHaveAttribute("type", "button");
+        expect(testButton).toHaveValue("1");
+    }
+);
+
+test("Percentage Button",
+    () => {
+        const screen = render(<PrecentageInput label={"Test Percentage"} value={7} amtType={FeeTypes.PERCENTAGE} handleOnChange={() =>{ return;}}/>);
+        
+        const testButton = screen.getByRole("button", {pressed: true});
+
+        expect(testButton).toBeInTheDocument();
+        expect(testButton).toHaveAttribute("type", "button");
+        expect(testButton).toHaveValue("100");
+    }
+);
+
+test("Button Presses",
+    () => {
+        let testValue = 0;
+        let testType = 0;
+
+        const screen = render(<PrecentageInput label={"Test Input"} value={7} amtType={FeeTypes.PERCENTAGE} handleOnChange={(newValue : number, valueType :  number) => {testValue = newValue; testType = valueType}}/>);
+        
+        const testButton = screen.getByRole("button", {pressed: false});
+        userEvent.click(testButton);
+
+        expect(testType).toBe(FeeTypes.FIXED)
+        expect(testValue).toBe(7);
+
+        const percentButton = screen.getByRole("button", {pressed: false});
+        userEvent.click(percentButton);
+
+        expect(testType).toBe(FeeTypes.PERCENTAGE)
+        expect(testValue).toBe(0.07);
+    }
+);

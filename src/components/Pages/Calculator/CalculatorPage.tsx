@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TextField from '@mui/material/TextField';
-import ItemCalculator from "../../../calculators/ItemCalculator";
+
 import { AppBar, Divider } from "@mui/material";
 import { Box } from "@mui/system";
 import SellingFee from "../../../model/SellingFee";
@@ -12,7 +12,7 @@ import ItemCost from "./ItemCost";
 const CalculatorPage =  () => {
    
     const [sellPrice, setSellPrice] = useState<number>(0);
-    const [salesTax, setSalesTax] = useState<number>(0);
+    //const [salesTax, setSalesTax] = useState<number>(0);
     const [shippingChrg, setShippingChrg] = useState<number>(0);
     const [estimatedShipping, setEstimatedShipping] = useState<number>(0);
     const [estimatedPacking, setEstimatedPacking] = useState<number>(0);
@@ -20,11 +20,9 @@ const CalculatorPage =  () => {
     const [totalCost, setTotalCost] = useState<number>(0);
     const [totalFee, setTotalFee] = useState<number>(0);
 
-
-    const setCalculatedAmount = (itemPrice : number, salesTax :number, salesTaxType: FeeTypes ) => {
-        const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
-        setSalesTax(Item.calculatedTax)
-        setTotalCost(Item.totalItemCost);
+    const handleItemCostChange = (itemPrice : number) => {
+        setTotalCost(itemPrice);
+      //  setSalesTax(taxValue);
     }
 
     const calculateTotalFees = (fees:SellingFee[]) => {
@@ -54,19 +52,11 @@ const CalculatorPage =  () => {
                 Fee Calculator
             </AppBar>
 
-            <Box >
-                <ItemCost handleOnChange={setCalculatedAmount} />
-                <div className="col-6">
-                    <span>Tax Amount</span>
-                        <br></br>
-                        <span>${salesTax}</span>
-                </div>
-                <div>
-                    <span>Total Cost</span>
-                    <br></br>
-                    <span>${totalCost}</span>
-                </div>
-            </Box>
+            <div className="calculatorContent" >
+                <ItemCost handleOnChange={handleItemCostChange} />
+
+     
+            </div>
         <br />                    
           
             <Divider>Selling Target</Divider>
@@ -78,7 +68,7 @@ const CalculatorPage =  () => {
                             required
                             id="selling-price"
                             type={"number"}
-                            label="Selling Price"
+                            label="Listing Price"
                             onChange={(event)=>{
                                 setSellPrice(Number(event.target.value));
                             }
@@ -91,7 +81,7 @@ const CalculatorPage =  () => {
                             required
                             id="shipping"
                             type={"number"}
-                            label="Shipping Amount"
+                            label="Shipping Charge"
                             onChange={(event)=>{             
                                 setShippingChrg(Number(event.target.value));
                             }   
@@ -105,7 +95,7 @@ const CalculatorPage =  () => {
                 <div className="row">
                     <div className="col-6">
                         <TextField
-                            label="Estimated Postage"     
+                            label="Actual Postage"     
                             type={'number'}
                             onChange={(event)=>{
                                 setEstimatedShipping(Number(event.target.value));
@@ -116,11 +106,11 @@ const CalculatorPage =  () => {
                     </div>
                     <div className="col-6">
                         <TextField
-                            label="Estimated Packing"
+                            label="Packing Cost"
                             type={'number'}
                             onChange={(event)=>{
                                 setEstimatedPacking(Number(event.target.value));
-                            }
+                                }
                             }
                             value={estimatedPacking}
                         />
