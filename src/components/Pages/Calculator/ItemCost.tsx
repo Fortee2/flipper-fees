@@ -24,9 +24,13 @@ const ItemCost = (props: ItemCostProps ) => {
 
     useEffect(() => {
         setCalculatedAmount(itemPrice, salesTax, salesTaxType);
-        props.handleOnChange(totaCost);
+        
     },[itemPrice, salesTax]);
 
+    useEffect(() => {
+        props.handleOnChange(totaCost);
+    } ,[totaCost]);
+    
     return (
         <>
             <Card variant="outlined">
