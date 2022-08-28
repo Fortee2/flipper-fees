@@ -11,7 +11,7 @@ interface SellingCostProps {
 const SellingCost = (props: SellingCostProps) => {
     const [estimatedShipping, setEstimatedShipping] = useState<number>(0);
     const [estimatedPacking, setEstimatedPacking] = useState<number>(0);
-    const [sellFee, setSellFee] = useState<number>(12.99);
+    const [sellFee, setSellFee] = useState<number>(12.9);
     const [bLowStdFee, setbLowStdFee] = useState<number>(6);
     const [baseFee, setBaseFee] = useState<number>(0);
     const [baseFeeType, setBaseFeeType] = useState<FeeTypes>(FeeTypes.PERCENTAGE);
