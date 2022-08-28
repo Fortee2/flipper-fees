@@ -30,7 +30,7 @@ const ItemCost = (props: ItemCostProps ) => {
     useEffect(() => {
         props.handleOnChange(totaCost);
     } ,[totaCost]);
-    
+
     return (
         <>
             <Card variant="outlined">
@@ -42,7 +42,7 @@ const ItemCost = (props: ItemCostProps ) => {
                         <div className="col-12">
                             <TextField
                                 required
-                                data-testid = "item-price-input"
+                                inputProps={{ 'data-testid': 'item-cost-input' }}
                                 id="item-price"
                                 type={"number"}
                                 onChange={(event)=>{
@@ -55,9 +55,9 @@ const ItemCost = (props: ItemCostProps ) => {
                     </div>   
                     <div className="row"  >
                         <div className="col-12 center">
-                     
                                 <PrecentageInput
                                     label="Sales Tax"
+                                    dataTestId={"sales-input"}
                                     amtType={FeeTypes.PERCENTAGE}
                                     value={salesTax}
                                     handleOnChange={(value, amtType)=>{ 

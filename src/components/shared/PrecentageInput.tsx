@@ -10,6 +10,7 @@ interface PrecentageInputProps {
     label: string;
     value: number;
     amtType: FeeTypes;
+    dataTestId?: string;
     handleOnChange: (newValue : number, valueType :  number)    => void;   
 }
 
@@ -39,7 +40,7 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
                 <TextField
                     required
                     type={"number"}
-                    inputProps={{ 'data-testid': 'item-price-input' }}
+                    inputProps={{ 'data-testid': ((props.dataTestId === null) ? 'item-price-input' : props.dataTestId) }}
                     label={props.label}
                     onChange={(event)=>{
                         setControlValue(parseFloat(event.target.value));

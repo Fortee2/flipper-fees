@@ -31,7 +31,7 @@ test("Input Number",
     () => {
         const screen = render(<PrecentageInput label={"Test Percentage"} value={7} amtType={FeeTypes.FIXED} handleOnChange={() =>{ return;}}/>);
         
-        const testInput = screen.getByTestId("item-price-input");
+        const testInput = screen.getByLabelText('Test Percentage',  {selector: 'input', exact:false});
         userEvent.type(testInput, "8");
 
         //expect(testValue).toBe(8);

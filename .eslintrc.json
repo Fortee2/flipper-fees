@@ -23,16 +23,6 @@
     "rules": {
         "react/react-in-jsx-scope": "off"
     },
-    "overrides": [
-        {
-            "files": [
-                "*.ts",
-                "*.tsx",
-                "*.js",
-                "*.jsx"
-            ]
-        }
-    ],
     "settings": {
         "react": {
           "createClass": "createReactClass", // Regex for Component Factory to use,
