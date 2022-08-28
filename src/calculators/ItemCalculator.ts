@@ -3,14 +3,14 @@ import FeeTypes from "../enums/FeeTypes";
 class ItemCalculator {
     price: number;
     tax: number;
-    taxType: number;
+    taxType: FeeTypes;
     calculatedTax: number;
     estimatedPostage: number;
     estimatedPackingMaterials: number;
     totalItemCost: number ;
 
 
-    constructor(price: number, tax: number, taxType: number, estimatedPostage: number, estimatedPackingMaterials: number){
+    constructor(price: number, tax: number, taxType: FeeTypes, estimatedPostage: number, estimatedPackingMaterials: number){
         this.price = price;
         this.tax = tax;
         this.taxType = taxType;

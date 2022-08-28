@@ -1,9 +1,10 @@
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PercentIcon from '@mui/icons-material/Percent';
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import FeeTypes from "../../enums/FeeTypes";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton from "@mui/material/ToggleButton";
 
 interface PrecentageInputProps {
     label: string;
@@ -21,16 +22,24 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
         props.handleOnChange(newValue,amtType);
     }
 
+    const onHandleClick = (
+            event: React.MouseEvent<HTMLElement>,
+            newAlignment: FeeTypes,
+        ) => {
+            setAmtType(newAlignment);
+        }
+
     useEffect(() => {
         calculateNewValue();
     } , [controlValue, amtType]);
 
     return (
         <>
-            <div className="float-left">
+            <div className="float-left width-30" >
                 <TextField
                     required
                     type={"number"}
+                    inputProps={{ 'data-testid': 'item-price-input' }}
                     label={props.label}
                     onChange={(event)=>{
                         setControlValue(parseFloat(event.target.value));
@@ -40,19 +49,19 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
                 />
             </div>
             <div className="float-left">
-                <FormControl   >
-                    <Select
-                        value={amtType}
-                        data-testid = "amtType-select"
-                        onChange={(event)=>{
-                            setAmtType(event.target.value as number);
-                            calculateNewValue() ;
-                        }}
-                    >
-                    <MenuItem value="100">Precentage</MenuItem>
-                    <MenuItem value="1">Fixed Amt.</MenuItem>
-                    </Select>
-                </FormControl>
+                <ToggleButtonGroup
+                    value={amtType}
+                    exclusive
+                    onChange={onHandleClick}
+                    aria-label="precentage-toggle-button"
+                >
+                    <ToggleButton value={FeeTypes.PERCENTAGE} aria-label="percentage">
+                        <PercentIcon />
+                    </ToggleButton>
+                    <ToggleButton value={FeeTypes.FIXED} aria-label="fixed">
+                        <AttachMoneyIcon />
+                    </ToggleButton>
+                </ToggleButtonGroup>
             </div>
         </>
     );
