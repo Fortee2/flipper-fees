@@ -1,10 +1,14 @@
-class SellingFee{
-    public name: string;
-    public amount: number;
+import Expense from "./Expense";
 
-    constructor(name: string, amount: number){
-        this.name = name;
-        this.amount = amount;
+export default class SellingFee {
+ 
+    readonly platformName: string;
+    fees: Expense[]; 
+
+    constructor(platformName: string, fees:Expense[]){
+        this.platformName = platformName;
+        this.fees = fees;
     }
+
+    
 }
-export default SellingFee;

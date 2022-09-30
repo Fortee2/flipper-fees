@@ -4,31 +4,37 @@ import { useEffect, useState } from "react";
 import ItemCalculator from "../../../calculators/ItemCalculator";
 import FeeTypes from "../../../enums/FeeTypes";
 import { PrecentageInput } from "../../shared/PrecentageInput";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import {setPricePaid, setTaxPaid,setTaxRate, setTaxRateType } from "./CalculatorSlice"
+
 
 interface ItemCostProps {
     handleOnChange: (itemPrice : number)    => void;
 }
 
 const ItemCost = (props: ItemCostProps ) => {
-    const [itemPrice, setItemPrice] = useState<number>(0);
-    const [salesTax, setSalesTax] = useState<number>(0);
-    const [salesTaxType , setSalesTaxType] = useState<number>(FeeTypes.PERCENTAGE);
-    const [totalTax, setTotalTax] = useState<number>(0);
+    const itemPrice = useAppSelector(state => state.calculator.pricePaid);
+    const totalTax = useAppSelector(state => state.calculator.taxPaid);
+    const salesTaxRate = useAppSelector(state => state.calculator.taxRate);
+    const salesTaxRateType = useAppSelector(state => state.calculator.taxRateType);
+    
     const [totaCost, setTotalCost] = useState<number>(0);
+    const dispatch = useAppDispatch();
 
     const setCalculatedAmount = (itemPrice : number, salesTax :number, salesTaxType: FeeTypes ) => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
-        setTotalTax(Item.calculatedTax)
+        dispatch(setTaxPaid(Item.calculatedTax));
+   
         setTotalCost(Item.totalItemCost);
     }
 
     useEffect(() => {
-        setCalculatedAmount(itemPrice, salesTax, salesTaxType);
+        setCalculatedAmount(itemPrice, salesTaxRate, salesTaxRateType);
         
-    },[itemPrice, salesTax]);
+    },[itemPrice, salesTaxRate, salesTaxRateType]);
 
     useEffect(() => {
-        props.handleOnChange(totaCost);
+        props.handleOnChange(itemPrice + totalTax);
     } ,[totaCost]);
 
     return (
@@ -46,7 +52,8 @@ const ItemCost = (props: ItemCostProps ) => {
                                 id="item-price"
                                 type={"number"}
                                 onChange={(event)=>{
-                                    setItemPrice( Number(event.target.value));
+                                    dispatch((setPricePaid(Number(event.target.value))));
+
                                 } }
                                 label="Item Cost"
                                 value={itemPrice}
@@ -58,11 +65,12 @@ const ItemCost = (props: ItemCostProps ) => {
                                 <PrecentageInput
                                     label="Sales Tax"
                                     dataTestId={"sales-input"}
-                                    amtType={FeeTypes.PERCENTAGE}
-                                    value={salesTax}
+                                    amtType={salesTaxRateType}
+                                    value={salesTaxRate}
                                     handleOnChange={(value, amtType)=>{ 
-                                        setSalesTax(value);
-                                        setSalesTaxType(amtType);
+                                    
+                                        dispatch(setTaxRate(value));
+                                        dispatch(setTaxRateType(amtType));
                                     }}
                                 />
                             </div>
@@ -77,7 +85,7 @@ const ItemCost = (props: ItemCostProps ) => {
                         <div className="col-6">
                             <span>Total Cost</span>
                             <br></br>
-                            <span>${totaCost}</span>
+                            <span>${totalTax + itemPrice}</span>
                         </div>
                     </div>
                 </CardContent>

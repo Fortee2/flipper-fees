@@ -1,63 +1,106 @@
 import { Card, CardContent, Divider, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import FeeTypes from "../../../enums/FeeTypes";
-import SellingFee from "../../../model/SellingFee";
+import Expense from "../../../model/Expense";
 import { PrecentageInput } from "../../shared/PrecentageInput";
+import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import {  setSellPrice, setShippingChrgd, setShippingPaid } from "./CalculatorSlice"
+import {setIntialFees, updateFee, selectSepecificFee } from "./FeeSlice";
+import SellingFee from "../../../model/SellingFee";
 
 interface SellingCostProps {
-    handleOnChange: (fees : SellingFee[], sellPrice: number, shippingChrg: number)    => void;
+    handleOnChange: (fees : Expense[], sellPrice: number, shippingChrg: number)    => void;
 }
 
 const SellingCost = (props: SellingCostProps) => {
-    const [estimatedShipping, setEstimatedShipping] = useState<number>(0);
+    const dispatch = useAppDispatch();
+    const fees = useAppSelector(state => state.fees.platformFee.fees);
+    const sellPrice = useAppSelector(state => state.calculator.sellPrice);
+    const shippingChrgd = useAppSelector(state => state.calculator.shippingChrgd);
+    const shippingPaid = useAppSelector(state => state.calculator.shippingPaid );
+    const belowStdFee = useAppSelector(state => {return selectSepecificFee(state,  "Below Std. Fee")} );
     const [estimatedPacking, setEstimatedPacking] = useState<number>(0);
-    const [sellFee, setSellFee] = useState<number>(12.9);
-    const [bLowStdFee, setbLowStdFee] = useState<number>(6);
-    const [baseFee, setBaseFee] = useState<number>(0);
-    const [baseFeeType, setBaseFeeType] = useState<FeeTypes>(FeeTypes.PERCENTAGE);
-    const [extraFee, setExtraFee] = useState<number>(0);
-    const [extraFeeType, setExtraFeeType] = useState<FeeTypes>(FeeTypes.PERCENTAGE);
-    const [sellPrice, setSellPrice] = useState<number>(0);
-    const [shippingChrg, setShippingChrg] = useState<number>(0);
+    const baseFee = useAppSelector(state => {return selectSepecificFee(state,  "Base Fee")} );
+
     const [salesTax, setSalesTax] = useState<number>(8);
     const [salesTaxType , setSalesTaxType] = useState<FeeTypes>(FeeTypes.PERCENTAGE);
     const [totalTax, setTotalTax] = useState<number>(0);
 
-    const onHandleChange = () => {    
-        const fees : SellingFee[] = [
-            {
-                name: "Shipping",
-                amount: estimatedShipping,
-            },
-            {
-                name: "Packing",
-                amount: estimatedPacking,
-            },
-            {
-                name: "Fixed Fee",
-                amount: 0.3,
-            },
-            { 
-                name: "Fee",
-                amount: baseFee,
-            },
-            {
-                name: "Extra Fee",
-                amount: extraFee,
-            }
-        ];
-        props.handleOnChange(fees, sellPrice, shippingChrg);
+    const loadIntialFees = () => {
+        const updatedFees = new SellingFee(
+            "eBay",
+            [
+                {
+                    name: "Listing Fee",
+                    amount: 0.3,
+                    rate: 0.3,
+                    rateType: FeeTypes.FIXED
+                },
+                {
+                    name: "Shipping",
+                    amount: shippingPaid,
+                    rate: 0,
+                    rateType: FeeTypes.FIXED
+                },
+                {
+                    name: "Packing",
+                    amount: estimatedPacking,
+                    rate: 0,
+                    rateType: FeeTypes.FIXED
+                },
+                { 
+                    name: "Base Fee",
+                    amount: 0,
+                    rate: 12.9,
+                    rateType: FeeTypes.PERCENTAGE
+                },
+                {
+                    name: "Below Std. Fee",
+                    amount: 0,
+                    rate: 6,
+                    rateType: FeeTypes.PERCENTAGE
+                }
+            ]);
+
+        dispatch(setIntialFees(updatedFees));
     }
 
+    const onHandleChange = () => {    
+
+        props.handleOnChange(fees, sellPrice, shippingChrgd);
+    }
+
+    //Component did mount
     useEffect(() => {
-        const totalAskingPrice = sellPrice + shippingChrg;
+        loadIntialFees();
+    }, []);
+
+    useEffect(() => {
+        const totalAskingPrice = sellPrice + shippingChrgd;
         setTotalTax( (FeeTypes.PERCENTAGE === salesTaxType) ? (totalAskingPrice * salesTax) : salesTax);
 
-        setBaseFee(  ((FeeTypes.PERCENTAGE === baseFeeType) ? ( (totalTax + totalAskingPrice) * sellFee) : sellFee));
-        setExtraFee( ((FeeTypes.PERCENTAGE === extraFeeType) ? ( (totalTax + totalAskingPrice) * bLowStdFee) : bLowStdFee));
-       
+   
+        dispatch(
+            updateFee(
+                {
+                ...baseFee,
+                ...{ amount:  ((FeeTypes.PERCENTAGE === baseFee.rateType) 
+                    ? ( (totalTax + totalAskingPrice) * baseFee.rate) : baseFee.rate)}
+                }
+            )
+        );
+        dispatch(
+            updateFee(
+               {
+                ...belowStdFee, 
+                ...{ amount:  ((FeeTypes.PERCENTAGE === belowStdFee.rateType) 
+                        ? ( (totalTax + totalAskingPrice) * belowStdFee.rate) : belowStdFee.rate)}
+               }
+            )
+        );
+        
         onHandleChange();   
-    } ,[estimatedShipping, estimatedPacking, sellFee, bLowStdFee, sellPrice, shippingChrg,salesTax]);
+    } ,[shippingPaid, estimatedPacking, baseFee, belowStdFee, sellPrice, shippingChrgd,salesTax]);
 
     return (
         <>
@@ -72,7 +115,7 @@ const SellingCost = (props: SellingCostProps) => {
                                 type={"number"}
                                 label="Listing Price"
                                 onChange={(event)=>{
-                                    setSellPrice(Number(event.target.value));
+                                    dispatch(setSellPrice(Number( event.target.value)));
                                 }
                                 }
                                 value={sellPrice}
@@ -84,11 +127,11 @@ const SellingCost = (props: SellingCostProps) => {
                                 id="shipping"
                                 type={"number"}
                                 label="Shipping Charge"
-                                onChange={(event)=>{             
-                                    setShippingChrg(Number(event.target.value));
+                                onChange={(event)=>{     
+                                    dispatch(setShippingChrgd(Number( event.target.value)));        
                                 }   
                                 }
-                                value={shippingChrg}
+                                value={shippingChrgd}
                             />
                         </div>
                     </div>
@@ -104,10 +147,10 @@ const SellingCost = (props: SellingCostProps) => {
                                 label="Actual Postage"     
                                 type={'number'}
                                 onChange={(event)=>{
-                                    setEstimatedShipping(Number(event.target.value));
+                                    dispatch(setShippingPaid(Number(event.target.value)));
                                 }
                                 }
-                                value={estimatedShipping}
+                                value={shippingPaid}
                             />
                         </div>
                         <div className="col-6">
@@ -136,39 +179,57 @@ const SellingCost = (props: SellingCostProps) => {
                             />
                         </div>
                         <div className="col-3">
-                            <span>${totalTax}</span>
+                            <span>Total + Tax ${totalTax + sellPrice + shippingChrgd}</span>
+                            <br/>
+                            <span>Tax Amt:${totalTax}</span>
                         </div>
                     </div>
                     <div className="row" >
                         <div className="col-9">
                             <PrecentageInput
                                 label="Seller Fees"
-                                amtType={baseFeeType}
-                                value={sellFee}
+                                amtType={baseFee.rateType}
+                                value={baseFee.amount}
                                 handleOnChange={(value, amtType)=>{
-                                    setSellFee(value);
-                                    setBaseFeeType(amtType);
+                                    const updateFeeRate = {
+                                        rate: value,
+                                        rateType: amtType
+                                    }
+
+                                    const updateExpense = {
+                                        ...baseFee, ...updateFeeRate
+                                    }
+
+                                    dispatch(updateFee(updateExpense));
                                 }}
                             /> 
                         </div>
                         <div className="col-3">
-                            <span>${baseFee}</span>
+                            <span>${baseFee.amount}</span>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-9">
                             <PrecentageInput
                                 label="Below Std. Fee"
-                                amtType={extraFeeType}
-                                value={bLowStdFee}
+                                amtType={belowStdFee.rateType}
+                                value={belowStdFee.rate}
                                 handleOnChange={(value, amtType)=>{
-                                    setbLowStdFee(value);
-                                   setExtraFeeType(amtType);
+                                    const updateFeeRate = {
+                                        rate: value,
+                                        rateType: amtType
+                                    }
+
+                                    const updateExpense = {
+                                        ...belowStdFee, ...updateFeeRate
+                                    }
+
+                                    dispatch(updateFee(updateExpense));
                                 }}
                             /> 
                         </div>
                         <div className="col-3">
-                            <span>${extraFee}</span>
+                            <span>${belowStdFee.amount}</span>
                         </div>
                     </div>
 

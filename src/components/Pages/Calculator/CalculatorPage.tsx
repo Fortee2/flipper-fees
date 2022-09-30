@@ -1,6 +1,6 @@
 import {  useState } from "react";
 import { AppBar } from "@mui/material";
-import SellingFee from "../../../model/SellingFee";
+import Expense from "../../../model/Expense";
 import FeeCalculator from "../../../calculators/FeeCalculator";
 import ItemCost from "./ItemCost";
 import SellingCost from "./SellingCost";
@@ -16,13 +16,13 @@ const CalculatorPage =  () => {
         setTotalCost(itemPrice);
     }
 
-    const handleSellingFeesChange = (sellingFees : SellingFee[], sellPrice: number, shippingChrg: number ) => {
+    const handleSellingFeesChange = (sellingFees : Expense[], sellPrice: number, shippingChrg: number ) => {
        calculateTotalFees(sellingFees);
        setShippingChrg(shippingChrg);
        setSellPrice(sellPrice);
     }
 
-    const calculateTotalFees = (fees:SellingFee[]) => {
+    const calculateTotalFees = (fees:Expense[]) => {
 
         const feeCalculator = new FeeCalculator(
             sellPrice,
