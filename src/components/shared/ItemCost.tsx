@@ -1,11 +1,11 @@
 import { Card, CardContent, Divider } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
-import ItemCalculator from "../../../calculators/ItemCalculator";
-import FeeTypes from "../../../enums/FeeTypes";
-import { PrecentageInput } from "../../shared/PrecentageInput";
-import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import {setPricePaid, setTaxPaid,setTaxRate, setTaxRateType } from "./CalculatorSlice"
+import ItemCalculator from "../../calculators/ItemCalculator";
+import FeeTypes from "../../enums/FeeTypes";
+import { PrecentageInput } from "./PrecentageInput";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import {setPricePaid, setTaxPaid,setTaxRate, setTaxRateType } from "../../Slices/CalculatorSlice"
 
 
 interface ItemCostProps {

@@ -1,14 +1,15 @@
 import {  useState } from "react";
 import { AppBar } from "@mui/material";
-import Expense from "../../../model/Expense";
-import FeeCalculator from "../../../calculators/FeeCalculator";
-import ItemCost from "./ItemCost";
-import SellingCost from "./SellingCost";
+import Expense from "../../model/Expense";
+import FeeCalculator from "../../calculators/FeeCalculator";
+import ItemCost from "../../components/shared/ItemCost";
+import SellingCost from "../../components/shared/SellingCost";
+import SellingTarget from "../../components/shared/SellingTarget";
+import { useAppSelector } from "../../store/hooks";
 
 const CalculatorPage =  () => {
    
-    const [sellPrice, setSellPrice] = useState<number>(0);
-    const [shippingChrg, setShippingChrg] = useState<number>(0);
+    const sellPrice = useAppSelector(state => state.calculator.totalSellPrice);
     const [totalCost, setTotalCost] = useState<number>(0);
     const [totalFee, setTotalFee] = useState<number>(0);
 
@@ -16,17 +17,15 @@ const CalculatorPage =  () => {
         setTotalCost(itemPrice);
     }
 
-    const handleSellingFeesChange = (sellingFees : Expense[], sellPrice: number, shippingChrg: number ) => {
+    const handleSellingFeesChange = (sellingFees : Expense[]) => {
        calculateTotalFees(sellingFees);
-       setShippingChrg(shippingChrg);
-       setSellPrice(sellPrice);
+      // setShippingChrg(shippingChrg);
+      // setSellPrice(sellPrice);
     }
 
     const calculateTotalFees = (fees:Expense[]) => {
 
         const feeCalculator = new FeeCalculator(
-            sellPrice,
-            shippingChrg,
             fees
         );
         
@@ -42,6 +41,7 @@ const CalculatorPage =  () => {
 
             <div className="calculatorContent" >
                 <ItemCost handleOnChange={handleItemCostChange} />
+                <SellingTarget/>
                 <SellingCost handleOnChange={handleSellingFeesChange} />
             </div>
             <br />                    
@@ -56,7 +56,7 @@ const CalculatorPage =  () => {
                 <div className="col-12">
                     <span>Expected Profit</span>
                     <br></br>
-                    <span>${ (sellPrice + shippingChrg - totalFee - totalCost).toPrecision(3)}</span>
+                    <span>${ (sellPrice - totalFee - totalCost).toPrecision(3)}</span>
                 </div>
                 </div>
             </div>

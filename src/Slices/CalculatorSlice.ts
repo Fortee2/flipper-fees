@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import FeeTypes from "../../../enums/FeeTypes";
+import FeeTypes from "../enums/FeeTypes";
 
-import { RootState } from "../../../store/store";
+import { RootState } from "../store/store";
 
 export interface iCalculatorState {
     pricePaid: number;
@@ -11,6 +11,7 @@ export interface iCalculatorState {
     sellPrice: number;
     shippingChrgd: number;
     shippingPaid: number;
+    totalSellPrice: number;
 }
 
 const initState: iCalculatorState = {
@@ -21,7 +22,8 @@ const initState: iCalculatorState = {
     sellPrice: 0,
     shippingChrgd: 0,
     shippingPaid: 0,
-}
+    totalSellPrice: 0,
+};
 
 export const calculatorSlice = createSlice({
     name: "calculator",
@@ -41,9 +43,11 @@ export const calculatorSlice = createSlice({
         },
         setSellPrice: (state, action: PayloadAction<number>) => {
             state.sellPrice = action.payload;
+            state.totalSellPrice = action.payload + state.shippingChrgd;
         },
         setShippingChrgd: (state, action: PayloadAction<number>) => {
             state.shippingChrgd = action.payload;
+            state.totalSellPrice = action.payload + state.sellPrice;
         },
         setShippingPaid: (state, action: PayloadAction<number>) => {
             state.shippingPaid = action.payload;
@@ -65,5 +69,9 @@ export const selectShippingChrgd = (state: RootState) => state.calculator.shippi
 //The amount it cost to ship the item
 export const selectShippingPaid = (state: RootState) => state.calculator.shippingPaid;
 //export const selectSellingFees = (state: RootState) => state.calculator.sellingFees;
+
+export const selectTotalSellingPrice = (state: RootState) => {
+    return state.calculator.sellPrice + state.calculator.shippingChrgd ;
+}
 
 export default calculatorSlice.reducer;

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
-import calcuatorReducer from '../components/Pages/Calculator/CalculatorSlice'
-import feeReducer from '../components/Pages/Calculator/FeeSlice'
+import calcuatorReducer from '../Slices/CalculatorSlice'
+import feeReducer from '../Slices/FeeSlice'
 import thunk from 'redux-thunk'
 
 export const store = configureStore({

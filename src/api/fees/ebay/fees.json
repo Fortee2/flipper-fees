@@ -1,0 +1,21 @@
+{
+    "platform": "ebay",
+    "fees":[
+        {
+            "name": "Final Value Fee",
+            "value": 0.3,
+            "rateType": 1
+        },
+        { 
+            "name": "Base Fee",
+            "value": 12.9,
+            "rateType": 100
+        },
+        {
+            "name": "Below Std. Fee",
+            "value": 6,
+            "rateType": 100
+        }
+    ]
+    
+}

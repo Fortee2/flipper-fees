@@ -1,13 +1,9 @@
 import Expense from "../model/Expense";
 
 class FeeCalculator {
-    public sellPrice: number;
-    public shippingAmt: number;
     public fees: Expense[] = [];
     
-    constructor(sellPrice:number, shippingAmt:number, fees: Expense[]){
-        this.sellPrice = sellPrice;
-        this.shippingAmt = shippingAmt;
+    constructor( fees: Expense[]){
         this.fees = fees;
     }
     

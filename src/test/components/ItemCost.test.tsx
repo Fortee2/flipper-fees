@@ -1,5 +1,5 @@
 import {render} from '@testing-library/react';
-import ItemCost from '../../components/Pages/Calculator/ItemCost';
+import ItemCost from '../../components/shared/ItemCost';
 import {store}  from '../../store/store';
 import { Provider } from 'react-redux';
 import userEvent from '@testing-library/user-event';

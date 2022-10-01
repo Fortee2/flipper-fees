@@ -1,12 +1,12 @@
 import { Card, CardContent, Divider, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import FeeTypes from "../../../enums/FeeTypes";
-import Expense from "../../../model/Expense";
-import { PrecentageInput } from "../../shared/PrecentageInput";
-import { useAppSelector, useAppDispatch } from "../../../store/hooks";
-import {  setSellPrice, setShippingChrgd, setShippingPaid } from "./CalculatorSlice"
-import {setIntialFees, updateFee, selectSepecificFee } from "./FeeSlice";
-import SellingFee from "../../../model/SellingFee";
+import FeeTypes from "../../enums/FeeTypes";
+import Expense from "../../model/Expense";
+import { PrecentageInput } from "./PrecentageInput";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import { setShippingPaid } from "../../Slices/CalculatorSlice"
+import {setIntialFees, updateFee, selectSepecificFee } from "../../Slices/FeeSlice";
+import SellingFee from "../../model/SellingFee";
 
 interface SellingCostProps {
     handleOnChange: (fees : Expense[], sellPrice: number, shippingChrg: number)    => void;
@@ -15,8 +15,7 @@ interface SellingCostProps {
 const SellingCost = (props: SellingCostProps) => {
     const dispatch = useAppDispatch();
     const fees = useAppSelector(state => state.fees.platformFee.fees);
-    const sellPrice = useAppSelector(state => state.calculator.sellPrice);
-    const shippingChrgd = useAppSelector(state => state.calculator.shippingChrgd);
+    const sellPrice = useAppSelector(state => state.calculator.totalSellPrice);
     const shippingPaid = useAppSelector(state => state.calculator.shippingPaid );
     const belowStdFee = useAppSelector(state => {return selectSepecificFee(state,  "Below Std. Fee")} );
     const [estimatedPacking, setEstimatedPacking] = useState<number>(0);
@@ -67,7 +66,7 @@ const SellingCost = (props: SellingCostProps) => {
 
     const onHandleChange = () => {    
 
-        props.handleOnChange(fees, sellPrice, shippingChrgd);
+        props.handleOnChange(fees, sellPrice, 0);
     }
 
     //Component did mount
@@ -75,69 +74,42 @@ const SellingCost = (props: SellingCostProps) => {
         loadIntialFees();
     }, []);
 
-    useEffect(() => {
-        const totalAskingPrice = sellPrice + shippingChrgd;
-        setTotalTax( (FeeTypes.PERCENTAGE === salesTaxType) ? (totalAskingPrice * salesTax) : salesTax);
 
-   
+    useEffect(() => {
         dispatch(
             updateFee(
                 {
                 ...baseFee,
-                ...{ amount:  ((FeeTypes.PERCENTAGE === baseFee.rateType) 
-                    ? ( (totalTax + totalAskingPrice) * baseFee.rate) : baseFee.rate)}
+                ...{ amount:  ((FeeTypes.PERCENTAGE === baseFee.rateType && baseFee.rate !==0) 
+                    ? ( (totalTax + sellPrice) * baseFee.rate) : baseFee.rate)}
                 }
             )
         );
+                
+        onHandleChange();   
+    } ,[shippingPaid, estimatedPacking, baseFee, sellPrice, salesTax]);
+
+    useEffect(() => {
         dispatch(
             updateFee(
                {
                 ...belowStdFee, 
-                ...{ amount:  ((FeeTypes.PERCENTAGE === belowStdFee.rateType) 
-                        ? ( (totalTax + totalAskingPrice) * belowStdFee.rate) : belowStdFee.rate)}
+                ...{ amount:  ((FeeTypes.PERCENTAGE === belowStdFee.rateType && belowStdFee.rate !== 0) 
+                        ? ( (totalTax +sellPrice ) * belowStdFee.rate) : belowStdFee.rate)}
                }
             )
         );
         
         onHandleChange();   
-    } ,[shippingPaid, estimatedPacking, baseFee, belowStdFee, sellPrice, shippingChrgd,salesTax]);
+    }, [ shippingPaid, estimatedPacking, belowStdFee, sellPrice, salesTax]);
+
+    useEffect(() => {
+        setTotalTax((salesTaxType === FeeTypes.PERCENTAGE) ? (sellPrice * salesTax) : salesTax);
+    }, [salesTax, salesTaxType, sellPrice]);
 
     return (
         <>
-            <Card variant="outlined">
-                <CardContent>
-                    <Divider>Selling Target</Divider>   
-                    <div className="row">
-                        <div className="col-6">
-                            <TextField
-                                required
-                                id="selling-price"
-                                type={"number"}
-                                label="Listing Price"
-                                onChange={(event)=>{
-                                    dispatch(setSellPrice(Number( event.target.value)));
-                                }
-                                }
-                                value={sellPrice}
-                            />
-                        </div>
-                        <div className="col-6">
-                            <TextField
-                                required
-                                id="shipping"
-                                type={"number"}
-                                label="Shipping Charge"
-                                onChange={(event)=>{     
-                                    dispatch(setShippingChrgd(Number( event.target.value)));        
-                                }   
-                                }
-                                value={shippingChrgd}
-                            />
-                        </div>
-                    </div>
-          
-                </CardContent>
-            </Card>
+
             <Card variant="outlined">
                 <CardContent>
                     <Divider>Ebay Selling Costs</Divider>
@@ -179,7 +151,7 @@ const SellingCost = (props: SellingCostProps) => {
                             />
                         </div>
                         <div className="col-3">
-                            <span>Total + Tax ${totalTax + sellPrice + shippingChrgd}</span>
+                            <span>Total + Tax ${totalTax + sellPrice}</span>
                             <br/>
                             <span>Tax Amt:${totalTax}</span>
                         </div>

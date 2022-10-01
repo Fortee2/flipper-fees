@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Expense from "../../../model/Expense";
-import SellingFee from "../../../model/SellingFee";
-import { RootState } from "../../../store/store";
+import Expense from "../model/Expense";
+import SellingFee from "../model/SellingFee";
+import { RootState } from "../store/store";
 
 export interface iFeeStore{
     platformFee: SellingFee;

@@ -1,7 +1,7 @@
 import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
-import CalculatorPage from "./components/Pages/Calculator/CalculatorPage"
+import CalculatorPage from "./Pages/Calculator/CalculatorPage"
 
 function App() {
   return (
