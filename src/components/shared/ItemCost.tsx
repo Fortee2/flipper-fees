@@ -1,36 +1,31 @@
 import { Card, CardContent, Divider } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
-import ItemCalculator from "../../../calculators/ItemCalculator";
-import FeeTypes from "../../../enums/FeeTypes";
-import { PrecentageInput } from "../../shared/PrecentageInput";
+import { useEffect} from "react";
+import ItemCalculator from "../../calculators/ItemCalculator";
+import FeeTypes from "../../enums/FeeTypes";
+import { PrecentageInput } from "./PrecentageInput";
+import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import {setPricePaid, setTaxPaid,setTaxRate, setTaxRateType } from "../../Slices/CalculatorSlice"
 
-interface ItemCostProps {
-    handleOnChange: (itemPrice : number)    => void;
-}
+const ItemCost = () => {
+    const itemPrice = useAppSelector(state => state.calculator.pricePaid);
+    const totalTax = useAppSelector(state => state.calculator.taxPaid);
+    const salesTaxRate = useAppSelector(state => state.calculator.taxRate);
+    const salesTaxRateType = useAppSelector(state => state.calculator.taxRateType);
 
-const ItemCost = (props: ItemCostProps ) => {
-    const [itemPrice, setItemPrice] = useState<number>(0);
-    const [salesTax, setSalesTax] = useState<number>(0);
-    const [salesTaxType , setSalesTaxType] = useState<number>(FeeTypes.PERCENTAGE);
-    const [totalTax, setTotalTax] = useState<number>(0);
-    const [totaCost, setTotalCost] = useState<number>(0);
+    const dispatch = useAppDispatch();
 
     const setCalculatedAmount = (itemPrice : number, salesTax :number, salesTaxType: FeeTypes ) => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
-        setTotalTax(Item.calculatedTax)
-        setTotalCost(Item.totalItemCost);
+        dispatch(setTaxPaid(Item.calculatedTax));
     }
 
     useEffect(() => {
-        setCalculatedAmount(itemPrice, salesTax, salesTaxType);
+        setCalculatedAmount(itemPrice, salesTaxRate, salesTaxRateType);
         
-    },[itemPrice, salesTax]);
+    },[itemPrice, salesTaxRate, salesTaxRateType]);
 
-    useEffect(() => {
-        props.handleOnChange(totaCost);
-    } ,[totaCost]);
-    
+
     return (
         <>
             <Card variant="outlined">
@@ -42,11 +37,12 @@ const ItemCost = (props: ItemCostProps ) => {
                         <div className="col-12">
                             <TextField
                                 required
-                                data-testid = "item-price-input"
+                                inputProps={{ 'data-testid': 'item-cost-input' }}
                                 id="item-price"
                                 type={"number"}
                                 onChange={(event)=>{
-                                    setItemPrice( Number(event.target.value));
+                                    dispatch((setPricePaid(Number(event.target.value))));
+
                                 } }
                                 label="Item Cost"
                                 value={itemPrice}
@@ -55,14 +51,15 @@ const ItemCost = (props: ItemCostProps ) => {
                     </div>   
                     <div className="row"  >
                         <div className="col-12 center">
-                     
                                 <PrecentageInput
                                     label="Sales Tax"
-                                    amtType={FeeTypes.PERCENTAGE}
-                                    value={salesTax}
+                                    dataTestId={"sales-input"}
+                                    amtType={salesTaxRateType}
+                                    value={salesTaxRate}
                                     handleOnChange={(value, amtType)=>{ 
-                                        setSalesTax(value);
-                                        setSalesTaxType(amtType);
+                                    
+                                        dispatch(setTaxRate(value));
+                                        dispatch(setTaxRateType(amtType));
                                     }}
                                 />
                             </div>
@@ -71,13 +68,13 @@ const ItemCost = (props: ItemCostProps ) => {
                     <div className="row"> 
                         <div className="col-6">
                             <span>Tax Amount</span>
-                                <br></br>
-                                <span>${totalTax}</span>
+                            <br></br>
+                            <span  data-testid='spTotalTax'>${parseFloat(totalTax.toFixed(3))}</span>
                         </div>
                         <div className="col-6">
                             <span>Total Cost</span>
                             <br></br>
-                            <span>${totaCost}</span>
+                            <span data-testid='spTotalCost'>${totalTax + itemPrice}</span>
                         </div>
                     </div>
                 </CardContent>
