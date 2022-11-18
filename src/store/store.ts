@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import calcuatorReducer from '../Slices/CalculatorSlice'
-import feeReducer from '../Slices/FeeSlice'
+import eBayFeeReducer from '../Slices/EbayFeeSlice'
+import FeeReducer from '../Slices/FeeSlice'
 import thunk from 'redux-thunk'
 
 export const store = configureStore({
   reducer: {
     calculator: calcuatorReducer,
-    fees: feeReducer
+    feesList: FeeReducer,
+    eBayFees: eBayFeeReducer
   },
    middleware: [thunk]
 });
