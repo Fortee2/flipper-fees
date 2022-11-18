@@ -1,62 +1,46 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Expense from "../model/Expense";
-import SellingFee from "../model/SellingFee";
 import { RootState } from "../store/store";
+import Fee from "../model/Fee";
 
-export interface iFeeStore{
-    platformFee: SellingFee;
+export interface iFeeState {
+    fees: Fee[];
 }
 
-const initState: iFeeStore = {
-    platformFee: new SellingFee("eBay", [])
+const initState: iFeeState = {
+    fees: [{name: "Base Fee", amount: 0.3}],
 }
 
-export const feeSlice = createSlice({
-    name: "fees",
+const FeeSlice = createSlice({
+    name: "feeAmmounts",
     initialState: initState,
     reducers: {
-        setIntialFees: (state, action: PayloadAction<SellingFee>) => {
-            state.platformFee = action.payload;
+        addFee: (state, action: PayloadAction<Fee>) => {
+            state.fees.push(action.payload);
         },
-        setPlatformName: (state, action: PayloadAction<SellingFee>) => {
-            state.platformFee = action.payload;
-        },
-        addFee: (state, action: PayloadAction<Expense>) => { 
-            state.platformFee.fees.push(action.payload);
-        },
-        removeFee: (state, action: PayloadAction<string>) => {
-            const idx = state.platformFee.fees.findIndex((fee) => fee.name === action.payload);
-            if(idx !== -1){
-                state.platformFee.fees.splice(idx, 1);
-            }
-        },
-        updateFee: (state, action: PayloadAction<Expense>) => {
-            const idx = state.platformFee.fees.findIndex((fee) => fee.name === action.payload.name);
-            if(idx !== -1){
-                state.platformFee.fees[idx] = action.payload;
-            }
-        }   
-
+        removeFee: (state, action: PayloadAction<Fee>) => {
+            state.fees = state.fees.filter(fee => fee.name !== action.payload.name);
+        }
     }   
 });
 
+export const { addFee, removeFee } = FeeSlice.actions;
 
-export const { setIntialFees, setPlatformName, addFee, removeFee, updateFee } = feeSlice.actions;
+export const selectSpecificFeeAmount = (state: RootState, name: string) => {
+    const singleFee  = state.feesList.fees.find(fee => fee.name === name);
+
+    if(singleFee){
+        return singleFee.amount;
+    }
+
+    return 0;
+}
 
 export const selectTotalFees = (state: RootState) => {
     let total = 0;
-    state.fees.platformFee.fees.forEach(fee => {
+    state.feesList.fees.forEach(fee => {
         total += fee.amount;
     });
     return total;
 }
 
-export const selectSepecificFee = (state: RootState, feeName: string):Expense  => {
-    const idx = state.fees.platformFee.fees.findIndex((fee) => fee.name === feeName);
-    if(idx !== -1){
-        return state.fees.platformFee.fees[idx];
-    }
-    return new Expense("Error", 0);
-}
-
-export default feeSlice.reducer;
+export default FeeSlice.reducer;
