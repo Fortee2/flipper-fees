@@ -10,7 +10,7 @@ class FeeCalculator {
     public calculateFees = (): number => {
         let totalFees = 0;
         this.fees.forEach(fee => {
-            totalFees += fee.amount;
+            totalFees += 0;
         } );
         return totalFees;
     }

@@ -19,7 +19,7 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
     const [amtType, setAmtType] = useState<number>(props.amtType);
 
     const calculateNewValue = () => {
-        const newValue: number = (amtType == FeeTypes.PERCENTAGE) ? controlValue / FeeTypes.PERCENTAGE : controlValue;
+        const newValue: number = isNaN( controlValue) ? 0 : controlValue;
         props.handleOnChange(newValue,amtType);
     }
 

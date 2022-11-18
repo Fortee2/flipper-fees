@@ -11,6 +11,7 @@ export interface iCalculatorState {
     sellPrice: number;
     shippingChrgd: number;
     shippingPaid: number;
+    packingMaterials: number;
     totalSellPrice: number;
 }
 
@@ -22,6 +23,7 @@ const initState: iCalculatorState = {
     sellPrice: 0,
     shippingChrgd: 0,
     shippingPaid: 0,
+    packingMaterials: 0,
     totalSellPrice: 0,
 };
 
@@ -52,10 +54,18 @@ export const calculatorSlice = createSlice({
         setShippingPaid: (state, action: PayloadAction<number>) => {
             state.shippingPaid = action.payload;
         },
+        setPackingMaterials: (state, action: PayloadAction<number>) => {
+            state.packingMaterials = action.payload;
+        }
     }
 } );
 
-export const { setPricePaid, setTaxPaid, setSellPrice, setShippingChrgd, setShippingPaid, setTaxRate, setTaxRateType } = calculatorSlice.actions;
+export const { setPricePaid, setTaxPaid, setSellPrice, setShippingChrgd, setShippingPaid, setTaxRate, setTaxRateType, setPackingMaterials } = calculatorSlice.actions;
+
+export const selectTotalCost = (state: RootState) => {
+    return state.calculator.pricePaid + state.calculator.taxPaid;
+}
+
 export const selectPricePaid = (state: RootState) => state.calculator.pricePaid;
 //Amount of tax paid when buying the item
 export const selectTaxPaid = (state: RootState) => state.calculator.taxPaid; 
