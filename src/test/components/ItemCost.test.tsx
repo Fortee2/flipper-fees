@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 describe('Item Cost Component', () => {
     test("Intial State Check",
         () => {
-            const screen = render(<Provider store={store}><ItemCost handleOnChange={() =>{ return;}}/></Provider>);
+            const screen = render(<Provider store={store}><ItemCost /></Provider>);
 
             const testInput = screen.getByTestId("sales-input");
             expect(testInput).toBeInTheDocument();
@@ -34,32 +34,32 @@ describe('Item Cost Component', () => {
         
     test("Input Cost Ony",  
         () => {
-                let totaCost = 0;
-
-                const screen = render(<Provider store={store}><ItemCost handleOnChange={(newValue : number) => {totaCost = newValue}}/></Provider>);
+     
+                const screen = render(<Provider store={store}><ItemCost /></Provider>);
 
                 const itemCostInput = screen.getByLabelText('Item Cost',  {selector: 'input', exact:false});
                 userEvent.type(itemCostInput, "8");
 
-                expect(totaCost).toBe(8);
+                const totalCost = screen.getByTestId('spTotalCost');
+                expect(totalCost.innerHTML).toBe("$8");
     });
 
     test("Input Cost with Tax Toggle",
         () => {
-            let totaCost = 0;
+            const screen = render(<Provider store={store}><ItemCost/></Provider>);
 
-            const screen = render(<Provider store={store}><ItemCost handleOnChange={(newValue : number) => {totaCost = newValue}}/></Provider>);
-
-            expect(totaCost).toBe(8);
+            const totalCost = screen.getByTestId('spTotalCost');
+            expect(totalCost.innerHTML).toBe("$8");
 
             const salesTaxInput = screen.getByLabelText('Sales Tax',  {selector: 'input', exact:false});
             userEvent.type(salesTaxInput, "10");
 
-            expect(totaCost).toBe(8.8);
+            
+            expect(totalCost.innerHTML).toBe("$8.8");
 
             const fixedButton = screen.getByLabelText("fixed", {selector: 'button', exact:false});
             userEvent.click(fixedButton);
 
-            expect(totaCost).toBe(18);
+            expect(totalCost.innerHTML).toBe("$18");
     });
 });
