@@ -1,31 +1,23 @@
 import { Card, CardContent, Divider } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import ItemCalculator from "../../calculators/ItemCalculator";
 import FeeTypes from "../../enums/FeeTypes";
 import { PrecentageInput } from "./PrecentageInput";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import {setPricePaid, setTaxPaid,setTaxRate, setTaxRateType } from "../../Slices/CalculatorSlice"
 
-
-interface ItemCostProps {
-    handleOnChange: (itemPrice : number)    => void;
-}
-
-const ItemCost = (props: ItemCostProps ) => {
+const ItemCost = () => {
     const itemPrice = useAppSelector(state => state.calculator.pricePaid);
     const totalTax = useAppSelector(state => state.calculator.taxPaid);
     const salesTaxRate = useAppSelector(state => state.calculator.taxRate);
     const salesTaxRateType = useAppSelector(state => state.calculator.taxRateType);
-    
-    const [totaCost, setTotalCost] = useState<number>(0);
+
     const dispatch = useAppDispatch();
 
     const setCalculatedAmount = (itemPrice : number, salesTax :number, salesTaxType: FeeTypes ) => {
         const Item = new ItemCalculator( itemPrice, salesTax, salesTaxType, 0, 0 );
         dispatch(setTaxPaid(Item.calculatedTax));
-   
-        setTotalCost(Item.totalItemCost);
     }
 
     useEffect(() => {
@@ -33,9 +25,6 @@ const ItemCost = (props: ItemCostProps ) => {
         
     },[itemPrice, salesTaxRate, salesTaxRateType]);
 
-    useEffect(() => {
-        props.handleOnChange(itemPrice + totalTax);
-    } ,[totaCost]);
 
     return (
         <>
@@ -79,13 +68,13 @@ const ItemCost = (props: ItemCostProps ) => {
                     <div className="row"> 
                         <div className="col-6">
                             <span>Tax Amount</span>
-                                <br></br>
-                                <span>${totalTax}</span>
+                            <br></br>
+                            <span  data-testid='spTotalTax'>${parseFloat(totalTax.toFixed(3))}</span>
                         </div>
                         <div className="col-6">
                             <span>Total Cost</span>
                             <br></br>
-                            <span>${totalTax + itemPrice}</span>
+                            <span data-testid='spTotalCost'>${totalTax + itemPrice}</span>
                         </div>
                     </div>
                 </CardContent>
