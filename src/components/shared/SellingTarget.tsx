@@ -4,9 +4,6 @@ import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import {  setSellPrice, setShippingChrgd,  setShippingPaid , setPackingMaterials} from "../../Slices/CalculatorSlice"
-import { useState } from "react";
-
-
 
 const SellingTarget = () => {
 

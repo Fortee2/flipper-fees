@@ -4,6 +4,7 @@ import FeeTypes from "../../enums/FeeTypes";
 import { selectSpecificFeeAmount, removeFee, addFee } from "../../Slices/FeeSlice";
 import { PrecentageInput } from "../shared/PrecentageInput";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import ProfitLoss from "../shared/ProfitLoss";
 
 //import {setBelowStdFee, setFinalValueFee} from "../../Slices/EbayFeeSlice";
 
@@ -23,7 +24,7 @@ const EbaySellingCost = () => {
 
 
     useEffect(() => {
-        setTotalTax((salesTaxType === FeeTypes.PERCENTAGE) ? (sellPrice * salesTax) : salesTax);
+        setTotalTax((salesTaxType === FeeTypes.PERCENTAGE) ? (sellPrice * (salesTax /100)) : salesTax);
     }, [salesTax, salesTaxType, sellPrice]);
 
     useEffect(() => {
@@ -52,7 +53,7 @@ const EbaySellingCost = () => {
             <Card variant="outlined">
                 <CardContent>
                     <Divider>Ebay Selling Costs</Divider>
-                        {/*  <div className="row">
+                        <div className="row">
                             <div className="col-9">
                             <PrecentageInput
                                 label="Estimated Tax Chrg'd"
@@ -70,7 +71,7 @@ const EbaySellingCost = () => {
                             <br/>
                             <span>Tax Amt:${totalTax}</span>
                         </div>
-                    </div>*/}
+                    </div>
                     <div className="row" >
                         <div className="col-9">
                             <span>Final Value Fee: {finalValueFee.rate}%</span>
@@ -87,7 +88,7 @@ const EbaySellingCost = () => {
                             <span>${belowStdAmount}</span>
                         </div>
                     </div>
-
+                    <ProfitLoss />
                 </CardContent>    
             </Card>
      
