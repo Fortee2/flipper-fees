@@ -23,7 +23,7 @@ const EbaySellingCost = () => {
 
 
     useEffect(() => {
-        setTotalTax((salesTaxType === FeeTypes.PERCENTAGE) ? (sellPrice * salesTax) : salesTax);
+        setTotalTax((salesTaxType === FeeTypes.PERCENTAGE) ? (sellPrice * (salesTax /100)) : salesTax);
     }, [salesTax, salesTaxType, sellPrice]);
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const EbaySellingCost = () => {
             <Card variant="outlined">
                 <CardContent>
                     <Divider>Ebay Selling Costs</Divider>
-                        {/*  <div className="row">
+                        { <div className="row">
                             <div className="col-9">
                             <PrecentageInput
                                 label="Estimated Tax Chrg'd"
@@ -70,7 +70,7 @@ const EbaySellingCost = () => {
                             <br/>
                             <span>Tax Amt:${totalTax}</span>
                         </div>
-                    </div>*/}
+                    </div>}
                     <div className="row" >
                         <div className="col-9">
                             <span>Final Value Fee: {finalValueFee.rate}%</span>
