@@ -14,7 +14,7 @@ const EbaySellingCost = () => {
     const shippingPaid = useAppSelector(state => state.calculator.shippingPaid );
     const belowStdFee = useAppSelector(state => state.eBayFees.belowStdFee);
 
-    const finalValueFee = useAppSelector(state => state.eBayFees.finalValueFee); 
+    const finalValueFee = useAppSelector(state => state.eBayFees.finalValueFee);
     const finalValueAmount = useAppSelector(state => selectSpecificFeeAmount(state, "Final Value Fee"));
     const belowStdAmount = useAppSelector(state => selectSpecificFeeAmount(state, "Below Standard Fee"));
 
@@ -65,7 +65,7 @@ const EbaySellingCost = () => {
                                     }
                                 }
                             />
-                        </div> 
+                        </div>
                         <div className="col-3">
                             <span>Total + Tax ${totalTax + sellPrice}</span>
                             <br/>
@@ -89,9 +89,9 @@ const EbaySellingCost = () => {
                         </div>
                     </div>
                     <ProfitLoss />
-                </CardContent>    
+                </CardContent>
             </Card>
-     
+
 
         </>
     )
