@@ -4,6 +4,7 @@ import FeeTypes from "../../enums/FeeTypes";
 import { selectSpecificFeeAmount, removeFee, addFee } from "../../Slices/FeeSlice";
 import { PrecentageInput } from "../shared/PrecentageInput";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
+import ProfitLoss from "../shared/ProfitLoss";
 
 //import {setBelowStdFee, setFinalValueFee} from "../../Slices/EbayFeeSlice";
 
@@ -13,7 +14,7 @@ const EbaySellingCost = () => {
     const shippingPaid = useAppSelector(state => state.calculator.shippingPaid );
     const belowStdFee = useAppSelector(state => state.eBayFees.belowStdFee);
 
-    const finalValueFee = useAppSelector(state => state.eBayFees.finalValueFee); 
+    const finalValueFee = useAppSelector(state => state.eBayFees.finalValueFee);
     const finalValueAmount = useAppSelector(state => selectSpecificFeeAmount(state, "Final Value Fee"));
     const belowStdAmount = useAppSelector(state => selectSpecificFeeAmount(state, "Below Standard Fee"));
 
@@ -52,7 +53,7 @@ const EbaySellingCost = () => {
             <Card variant="outlined">
                 <CardContent>
                     <Divider>Ebay Selling Costs</Divider>
-                        { <div className="row">
+                        <div className="row">
                             <div className="col-9">
                             <PrecentageInput
                                 label="Estimated Tax Chrg'd"
@@ -64,13 +65,13 @@ const EbaySellingCost = () => {
                                     }
                                 }
                             />
-                        </div> 
+                        </div>
                         <div className="col-3">
                             <span>Total + Tax ${totalTax + sellPrice}</span>
                             <br/>
                             <span>Tax Amt:${totalTax}</span>
                         </div>
-                    </div>}
+                    </div>
                     <div className="row" >
                         <div className="col-9">
                             <span>Final Value Fee: {finalValueFee.rate}%</span>
@@ -87,10 +88,10 @@ const EbaySellingCost = () => {
                             <span>${belowStdAmount}</span>
                         </div>
                     </div>
-
-                </CardContent>    
+                    <ProfitLoss />
+                </CardContent>
             </Card>
-     
+
 
         </>
     )
