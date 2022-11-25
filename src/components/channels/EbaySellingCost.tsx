@@ -1,7 +1,7 @@
 import { Card, CardContent, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import FeeTypes from "../../enums/FeeTypes";
-import { selectSpecificFeeAmount, removeFee, addFee } from "../../Slices/FeeSlice";
+import { selectSpecificFeeAmount, removeFee, addFee } from "../../Slices/EbayFeeSlice";
 import { PrecentageInput } from "../shared/PrecentageInput";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import ProfitLoss from "../shared/ProfitLoss";
@@ -67,9 +67,9 @@ const EbaySellingCost = () => {
                             />
                         </div>
                         <div className="col-3">
-                            <span>Total + Tax ${totalTax + sellPrice}</span>
+                            <span>Total + Tax ${(totalTax + sellPrice).toPrecision(3)}</span>
                             <br/>
-                            <span>Tax Amt:${totalTax}</span>
+                            <span>Tax Amt:${totalTax.toPrecision(3)}</span>
                         </div>
                     </div>
                     <div className="row" >
@@ -77,7 +77,7 @@ const EbaySellingCost = () => {
                             <span>Final Value Fee: {finalValueFee.rate}%</span>
                         </div>
                         <div className="col-3">
-                            <span>${finalValueAmount}</span>
+                            <span>${finalValueAmount.toPrecision(3)}</span>
                         </div>
                     </div>
                     <div className="row">
@@ -85,10 +85,10 @@ const EbaySellingCost = () => {
                             <span>Below Standard Fee: {belowStdFee.rate}%</span>
                         </div>
                         <div className="col-3">
-                            <span>${belowStdAmount}</span>
+                            <span>${belowStdAmount.toPrecision(3)}</span>
                         </div>
                     </div>
-                    <ProfitLoss />
+                    <ProfitLoss marketPlace="eBay" />
                 </CardContent>
             </Card>
 
