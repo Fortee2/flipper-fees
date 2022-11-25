@@ -1,14 +1,16 @@
 import { Card, CardContent, Divider } from "@mui/material";
 import { useEffect } from "react";
 import FeeTypes from "../../enums/FeeTypes";
-import { addFee, removeFee } from "../../Slices/FeeSlice";
+import {selectSpecificFeeAmount, addFee, removeFee } from "../../Slices/MercariFeeSlice";
 import PaymentFees from "../shared/PaymentFees";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import ProfitLoss from "../shared/ProfitLoss";
 
 const MeracariSellingCost = () => {
     const dispatch = useAppDispatch();
     const baseFee = useAppSelector(state => state.mercariFees.baseFee);
     const sellPrice = useAppSelector(state => state.calculator.totalSellPrice);
+    const finalValueAmount = useAppSelector(state => selectSpecificFeeAmount(state, "Final Value Fee"));
 
     useEffect(() => {
         let fvFee = 0;
@@ -29,11 +31,11 @@ const MeracariSellingCost = () => {
                         <span>Final Value Fee: {baseFee.rate}%</span>
                     </div>
                     <div className="col-3">
-                        <span>${0}</span>
+                        <span>${finalValueAmount.toPrecision(3)}</span>
                     </div>
                 </div>
                 <PaymentFees />
-
+                <ProfitLoss marketPlace="Mercari" />
             </CardContent>    
         </Card>
     );
