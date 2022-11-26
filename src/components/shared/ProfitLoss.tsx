@@ -3,7 +3,6 @@ import { selectTotalFees as mercarTotalFees } from "../../Slices/MercariFeeSlice
 import { selectTotalFees as ebayTotalFees } from "../../Slices/EbayFeeSlice";
 import { selectTotalCost  } from "../../Slices/CalculatorSlice";
 import { useEffect, useState } from "react";
-import { PropaneSharp } from "@mui/icons-material";
 
 export interface IProfitLossProps {
     marketPlace: string;
