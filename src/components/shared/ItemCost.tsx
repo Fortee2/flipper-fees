@@ -39,7 +39,6 @@ const ItemCost = () => {
                                 required
                                 inputProps={{ 'data-testid': 'item-cost-input' }}
                                 id="item-price"
-                                type={"number"}
                                 onChange={(event)=>{
                                     dispatch((setPricePaid(Number(event.target.value))));
 
