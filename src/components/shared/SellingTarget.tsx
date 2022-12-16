@@ -1,9 +1,9 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent/CardContent";
 import Divider from "@mui/material/Divider";
-import TextField from "@mui/material/TextField";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import {  setSellPrice, setShippingChrgd,  setShippingPaid , setPackingMaterials} from "../../Slices/CalculatorSlice"
+import NumericEntry from "./NumericEntry";
 
 const SellingTarget = () => {
 
@@ -20,26 +20,21 @@ const SellingTarget = () => {
                     <Divider>Selling Target</Divider>   
                     <div className="row">
                         <div className="col-6">
-                            <TextField
-                                required
-                                id="selling-price"
-                                type={"number"}
+                            <NumericEntry
                                 label="Listing Price"
-                                onChange={(event)=>{
-                                    dispatch(setSellPrice(Number( event.target.value)));
-                                }
-                                }
+                                dataTestId={"selling-price"}
+                                handleOnChange={(value)=>{
+                                    dispatch(setSellPrice(value));
+                                }}
                                 value={sellPrice}
                             />
                         </div>
                         <div className="col-6">
-                            <TextField
-                                required
-                                id="shipping"
-                                type={"number"}
+                            <NumericEntry
+                                dataTestId="shipping"
                                 label="Shipping Charge"
-                                onChange={(event)=>{     
-                                    dispatch(setShippingChrgd(Number( event.target.value)));        
+                                handleOnChange={(value)=>{     
+                                    dispatch(setShippingChrgd(value));        
                                 }   
                                 }
                                 value={shippingChrgd}
@@ -47,22 +42,20 @@ const SellingTarget = () => {
                         </div>
                         <div className="row">
                             <div className="col-6">
-                                <TextField
+                                <NumericEntry
                                     label="Actual Postage"     
-                                    type={'number'}
-                                    onChange={(event)=>{
-                                        dispatch(setShippingPaid(Number(event.target.value)));
+                                    handleOnChange={(value)=>{
+                                        dispatch(setShippingPaid(value));
                                     }
                                     }
                                     value={shippingPaid}
                                 />
                             </div>
                             <div className="col-6">
-                                <TextField
+                                <NumericEntry
                                     label="Packing Cost"
-                                    type={'number'}
-                                    onChange={(event)=>{
-                                        dispatch(setPackingMaterials(Number(event.target.value)));
+                                    handleOnChange={(value)=>{
+                                        dispatch(setPackingMaterials(value));
                                         }
                                     }
                                     value={packingMaterials}

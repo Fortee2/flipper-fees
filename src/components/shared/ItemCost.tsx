@@ -1,5 +1,4 @@
 import { Card, CardContent, Divider } from "@mui/material";
-//import TextField from "@mui/material/TextField";
 import { useEffect} from "react";
 import ItemCalculator from "../../calculators/ItemCalculator";
 import FeeTypes from "../../enums/FeeTypes";
@@ -13,7 +12,6 @@ const ItemCost = () => {
     const totalTax = useAppSelector(state => state.calculator.taxPaid);
     const salesTaxRate = useAppSelector(state => state.calculator.taxRate);
     const salesTaxRateType = useAppSelector(state => state.calculator.taxRateType);
-  //  const [iPrice, setIPrice] = useState(String);
 
     const dispatch = useAppDispatch();
 
@@ -37,20 +35,6 @@ const ItemCost = () => {
                     </Divider>
                     <div className="row">
                         <div className="col-12">
-    {/*                         <TextField
-                                required
-                                inputProps={{ 'data-testid': 'item-cost-input' }}
-                                id="item-price"
-                                type={"number"}
-                                placeholder="Amount Paid"
-                                onChange={(event)=>{
-                                   setIPrice(event.target.value);
-                                    dispatch((setPricePaid(Number(event.target.value))));
-                                } }
-                                label="Item Cost"
-                                value={iPrice}
-                            />    
- */}
                             <NumericEntry
                                 label="Item Cost"
                                 dataTestId={"item-cost-input"}

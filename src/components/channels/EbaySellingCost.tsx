@@ -58,6 +58,7 @@ const EbaySellingCost = () => {
                             <PrecentageInput
                                 label="Estimated Tax Chrg'd"
                                 amtType={salesTaxType}
+                        
                                 value={salesTax}
                                 handleOnChange={(value, amtType)=>{
                                         setSalesTax(value);
