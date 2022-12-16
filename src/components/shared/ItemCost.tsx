@@ -1,17 +1,19 @@
 import { Card, CardContent, Divider } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { useEffect} from "react";
+import { useEffect, useState} from "react";
 import ItemCalculator from "../../calculators/ItemCalculator";
 import FeeTypes from "../../enums/FeeTypes";
 import { PrecentageInput } from "./PrecentageInput";
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import {setPricePaid, setTaxPaid,setTaxRate, setTaxRateType } from "../../Slices/CalculatorSlice"
+import NumericEntry from "./NumericEntry";
 
 const ItemCost = () => {
     const itemPrice = useAppSelector(state => state.calculator.pricePaid);
     const totalTax = useAppSelector(state => state.calculator.taxPaid);
     const salesTaxRate = useAppSelector(state => state.calculator.taxRate);
     const salesTaxRateType = useAppSelector(state => state.calculator.taxRateType);
+    const [iPrice, setIPrice] = useState(String);
 
     const dispatch = useAppDispatch();
 
@@ -35,17 +37,29 @@ const ItemCost = () => {
                     </Divider>
                     <div className="row">
                         <div className="col-12">
-                            <TextField
+    {/*                         <TextField
                                 required
                                 inputProps={{ 'data-testid': 'item-cost-input' }}
                                 id="item-price"
+                                type={"number"}
+                                placeholder="Amount Paid"
                                 onChange={(event)=>{
+                                   setIPrice(event.target.value);
                                     dispatch((setPricePaid(Number(event.target.value))));
-
                                 } }
                                 label="Item Cost"
-                                value={itemPrice}
+                                value={iPrice}
                             />    
+ */}
+                            <NumericEntry
+                                label="Item Cost"
+                                dataTestId={"item-cost-input"}
+                                handleOnChange={(value)=>{
+                                    dispatch(setPricePaid(value));
+                                }}
+                                value={0}
+                            />
+
                         </div>
                     </div>   
                     <div className="row"  >
