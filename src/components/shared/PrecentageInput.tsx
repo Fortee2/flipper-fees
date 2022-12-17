@@ -1,10 +1,10 @@
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PercentIcon from '@mui/icons-material/Percent';
-import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import FeeTypes from "../../enums/FeeTypes";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import ToggleButton from "@mui/material/ToggleButton";
+import NumericEntry from './NumericEntry';
 
 interface PrecentageInputProps {
     label: string;
@@ -37,13 +37,11 @@ export const PrecentageInput = (props: PrecentageInputProps) => {
     return (
         <>
             <div className="float-left width-30" >
-                <TextField
-                    required
-                    type={"number"}
-                    inputProps={{ 'data-testid': ((props.dataTestId === null) ? 'item-price-input' : props.dataTestId) }}
+                <NumericEntry
+                    dataTestId={ (props.dataTestId === null) ? '' : props.dataTestId }
                     label={props.label}
-                    onChange={(event)=>{
-                        setControlValue(parseFloat(event.target.value));
+                    handleOnChange={(value)=>{
+                        setControlValue(value);
                         calculateNewValue();
                     } }
                     value={controlValue}

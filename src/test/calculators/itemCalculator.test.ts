@@ -22,7 +22,7 @@ describe("ItemCalculator Fixed", () => {
 });
 
 describe("ItemCalculator Percentage", () => {
-    const itemCalculator = new ItemCalculator(200, 0.1, FeeTypes.PERCENTAGE, 15, 20);
+    const itemCalculator = new ItemCalculator(200, 10, FeeTypes.PERCENTAGE, 15, 20);
 
     it("should calculate tax amount", () => {
         expect(itemCalculator.calculatedTax).toBe(20);
